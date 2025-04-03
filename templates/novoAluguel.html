@@ -1,0 +1,43 @@
+{% extends 'base_navbar.html' %}
+{% block conteudo %}
+<div class="container-fluid d-flex flex-column mi-vh-100">
+    <div class="row justify-content-center align-items-center flex-grow-1">
+        <div class="col-12 col-md-8 col-lg-2" style="padding-top: 100px">
+            <div class="card shadow">
+                <div>
+                    <h2 class="text-center">Cadastrar Aluguel</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{url_for('novoAluguel_route.novoAluguel')}}">
+                        {{ form.hidden_tag() }}
+
+                        <div class="mb-3">
+                            {{ form.casa.label(class="form-label fw-bold") }}
+                            {{ form.casa(class="form-select") }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.quantidade_pessoas.label(class="form-label fw-bold") }}
+                            {{ form.quantidade_pessoas(class="form-control") }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.observacoes.label(class="form-label fw-bold") }}
+                            {{ form.observacoes(class="form-control", rows=4) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.data_inicio.label(class="form-label fw-bold") }}
+                            {{ form.data_inicio(class="form-control", type="date") }}
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Cadastrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock conteudo %}

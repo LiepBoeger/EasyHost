@@ -1,0 +1,15 @@
+{% extends 'base_navbar.html' %}
+{% block conteudo %}
+<body>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; box-sizing: border-box; margin: 0; padding-bottom: 60px">
+        <div class="card">
+            <h2>Cadastro de Residência</h2>
+            <form action="{{url_for('cadastroCasa_route.cadastrarCasa')}}" method="POST">
+                <input type="text" id="nomeCasa" name="nomeCasa" placeholder="Nome da Casa" required>
+                <input type="file" id="fotoCasa" name="fotoCasa" accept="image/*" required>
+                <button type="submit">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+</body>
+{% endblock conteudo%}
