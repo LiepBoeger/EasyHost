@@ -29,13 +29,13 @@ def valida_campos(nome, email, senha, telefone, confirma_senha):
 @cadastro_route_bp.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
     if request.method == 'POST':
-        nome = request.form['nome']
-        email = request.form['email']
-        telefone = request.form['telefone']
-        senha = request.form['senha']
-        confirma_senha = request.form['confirma_senha']
+        nome = request.form.get('nome')
+        email = request.form.get('email')
+        #telefone = request.form.get('telefone')
+        senha = request.form.get('senha')
+        confirma_senha = request.form.get('confirma_senha')
 
-        if valida_campos(nome, email, senha, telefone, confirma_senha):
+        if valida_campos(nome, email, senha, 2, confirma_senha):
             senha = generate_password_hash(request.form['senha'])
             usuario = Usuario(nome, email, telefone, senha)
             db.session.add(usuario)

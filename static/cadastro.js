@@ -1,23 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
     const togglePassword = document.getElementById("togglePassword")
     const password = document.getElementById("senha")
+    const toggleConfirmPassword = document.getElementById("toggleConfirmPassword")
+    const confirmPassword = document.getElementById("confirma_senha")
   
-    togglePassword.addEventListener("click", () => {
-      // Alternar o tipo do input entre 'password' e 'text'
-      const type = password.getAttribute("type") === "password" ? "text" : "password"
-      password.setAttribute("type", type)
+    function togglePasswordVisibility(passwordField, toggleButton) {
+      const type = passwordField.getAttribute("type") === "password" ? "text" : "password"
+      passwordField.setAttribute("type", type)
   
-      // Alternar o ícone entre 'eye' e 'eye-off'
-      const eyeIcon = togglePassword.querySelector(".eye-icon")
+      const eyeIcon = toggleButton.querySelector("svg")
   
       if (type === "password") {
-        // Mostrar ícone de olho normal
         eyeIcon.innerHTML = `
                   <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
                   <circle cx="12" cy="12" r="3"></circle>
               `
       } else {
-        // Mostrar ícone de olho cortado
         eyeIcon.innerHTML = `
                   <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
                   <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
@@ -25,9 +23,35 @@ document.addEventListener("DOMContentLoaded", () => {
                   <line x1="2" x2="22" y1="2" y2="22"></line>
               `
       }
+    }
+  
+    togglePassword.addEventListener("click", () => {
+      togglePasswordVisibility(password, togglePassword)
     })
   
-    // Funcionalidade para fechar mensagens flash
+    toggleConfirmPassword.addEventListener("click", () => {
+      togglePasswordVisibility(confirmPassword, toggleConfirmPassword)
+    })
+  
+    const form = document.querySelector("form")
+  
+    form.addEventListener("submit", (e) => {
+      if (password.value !== confirmPassword.value) {
+        e.preventDefault()
+        alert("As senhas não coincidem. Por favor, verifique.")
+      }
+    })
+
+    confirmPassword.addEventListener("input", () => {
+      if (password.value && confirmPassword.value) {
+        if (password.value !== confirmPassword.value) {
+          confirmPassword.style.borderColor = "#e53e3e"
+        } else {
+          confirmPassword.style.borderColor = "#10b981"
+        }
+      }
+    })
+  
     const closeButtons = document.querySelectorAll(".close-flash")
     closeButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -40,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
       })
     })
   
-    // Auto-fechar mensagens flash após 5 segundos
     const flashMessages = document.querySelectorAll(".flash-message")
     flashMessages.forEach((message) => {
       setTimeout(() => {

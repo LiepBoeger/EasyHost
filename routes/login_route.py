@@ -8,8 +8,8 @@ login_route_bp = Blueprint('login_route', __name__)
 @login_route_bp.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        senha = request.form['senha']
+        email = request.form.get('email')
+        senha = request.form.get('senha')
         if not valida_campos(email, senha):
             return redirect(url_for('login_route.login'))
         usuario = usuario_models.Usuario.query.filter_by(email=email).first()
