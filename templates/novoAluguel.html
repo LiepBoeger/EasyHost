@@ -1,43 +1,107 @@
-{% extends 'base_navbar.html' %}
-{% block conteudo %}
-<div class="container-fluid d-flex flex-column mi-vh-100">
-    <div class="row justify-content-center align-items-center flex-grow-1">
-        <div class="col-12 col-md-8 col-lg-2" style="padding-top: 100px">
-            <div class="card shadow">
-                <div>
-                    <h2 class="text-center">Cadastrar Aluguel</h2>
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="{{url_for('novoAluguel_route.novoAluguel')}}">
-                        {{ form.hidden_tag() }}
+{% extends "base_dashboard.html" %}
 
-                        <div class="mb-3">
-                            {{ form.casa.label(class="form-label fw-bold") }}
-                            {{ form.casa(class="form-select") }}
-                        </div>
+{% block title %}EasyHost - Cadastrar Aluguel{% endblock %}
 
-                        <div class="mb-3">
-                            {{ form.quantidade_pessoas.label(class="form-label fw-bold") }}
-                            {{ form.quantidade_pessoas(class="form-control") }}
-                        </div>
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
 
-                        <div class="mb-3">
-                            {{ form.observacoes.label(class="form-label fw-bold") }}
-                            {{ form.observacoes(class="form-control", rows=4) }}
-                        </div>
+{% block content %}
+<div class="page-header">
+    <h1>Cadastrar Novo Aluguel</h1>
+</div>
 
-                        <div class="mb-3">
-                            {{ form.data_inicio.label(class="form-label fw-bold") }}
-                            {{ form.data_inicio(class="form-control", type="date") }}
-                        </div>
-
-                        <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg">Cadastrar</button>
-                        </div>
-                    </form>
+<div class="form-container">
+    {% if form %}
+        <form method="POST" class="dashboard-form" action="{{url_for('novoAluguel_route.novoAluguel')}}">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label for="residencia_id">Residência</label>
+                <div class="input-group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="input-icon">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    {{ form.casa(class="form-select") }}
                 </div>
             </div>
+            
+            <div class="form-group">
+                <label for="quantidade_hospedes">Quantidade de Hóspedes</label>
+                <div class="input-group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="input-icon">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    {{ form.quantidade_pessoas(class="form-control") }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="data_aluguel">Data do Aluguel</label>
+                <div class="input-group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="input-icon">
+                        <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    {{ form.data_inicio(class="form-control", type="date") }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="observacoes">Observações</label>
+                <div class="input-group textarea-group">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="input-icon textarea-icon">
+                        <line x1="21" y1="6" x2="3" y2="6"></line>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                        <line x1="17" y1="18" x2="3" y2="18"></line>
+                    </svg>
+                    {{ form.observacoes(class="form-control", rows=4) }}
+                </div>
+            </div>
+            
+            <button type="submit" class="btn-primary">Cadastrar Aluguel</button>
+        </form>
+    {% else %}
+        <div class="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#1a2e44" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <h2>Nenhuma residência cadastrada</h2>
+            <p>Você precisa cadastrar pelo menos uma residência antes de criar um aluguel.</p>
+            <div class="empty-actions">
+                <a href="{{ url_for('cadastroCasa_route.cadastrarCasa') }}" class="btn-primary">Cadastrar Residência</a>
+            </div>
         </div>
-    </div>
+    {% endif %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {% if category %}{{ category }}{% else %}info{% endif %}">
+                    <span>{{ message }}</span>
+                    <button type="button" class="close-flash">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 </div>
-{% endblock conteudo %}
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#data_aluguel", {
+            dateFormat: "d/m/Y",
+            locale: "pt",
+            minDate: "today"
+        });
+    });
+</script>
+{% endblock %}

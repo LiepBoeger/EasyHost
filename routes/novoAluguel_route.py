@@ -11,14 +11,12 @@ novoAluguel_route_bp = Blueprint('novoAluguel_route', __name__)
 @novoAluguel_route_bp.route('/novoAluguel', methods=['GET', 'POST'])
 def novoAluguel():
     form = AluguelForm()
-    form.casa.choices = [(casa.id, casa.nome_casa) for casa in Casas.query.all()]
+    form.casa.choices = [(casa.id, f"{casa.id} - {casa.nome_casa}") for casa in Casas.query.all()]
 
     if request.method == 'POST':
-        print("Dados do formulário:", form.data)  # Debug
-        print("Erros:", form.errors)  # Debug
-
+        print(form.validate_on_submit())
         if form.validate_on_submit():
-            print("Formulário válido!")  # Debug
+            print("Formulário válido!")
             aluguel = Aluguel(
                 id_usuario=current_user.id,
                 id_casa=form.casa.data,
@@ -34,5 +32,4 @@ def novoAluguel():
             except Exception as e:
                 db.session.rollback()
                 flash(f'Erro ao cadastrar aluguel: {str(e)}', 'danger')
-
     return render_template('novoAluguel.html', form=form)

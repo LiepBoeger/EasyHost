@@ -1,15 +1,72 @@
-{% extends 'base_navbar.html' %}
-{% block conteudo %}
-<body>
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; box-sizing: border-box; margin: 0; padding-bottom: 60px">
-        <div class="card">
-            <h2>Cadastro de Residência</h2>
-            <form action="{{url_for('cadastroCasa_route.cadastrarCasa')}}" method="POST">
-                <input type="text" id="nomeCasa" name="nomeCasa" placeholder="Nome da Casa" required>
-                <input type="file" id="fotoCasa" name="fotoCasa" accept="image/*" required>
-                <button type="submit">Cadastrar</button>
-            </form>
+{% extends "base_dashboard.html" %}
+
+{% block title %}EasyHost - Cadastrar Residência{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Cadastrar Nova Residência</h1>
+</div>
+
+<div class="form-container">
+    <form method="POST" enctype="multipart/form-data" class="dashboard-form">
+        <div class="form-group">
+            <label for="nome">Nome da Residência</label>
+            <div class="input-group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="input-icon">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <input type="text" id="nomeCasa" name="nomeCasa" placeholder="Ex: Casa de Praia" required>
+            </div>
         </div>
-    </div>
-</body>
-{% endblock conteudo%}
+        
+        <div class="form-group">
+            <label for="imagem">Imagem da Residência</label>
+            <div class="file-input-container">
+                <div class="file-input-wrapper">
+                    <input type="file" id="fotoCasa" name="fotoCasa" accept="image/*" required>
+                    <div class="file-input-custom">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                            <circle cx="9" cy="9" r="2"></circle>
+                            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                        </svg>
+                        <span id="file-name">Selecione uma imagem</span>
+                    </div>
+                </div>
+                <div id="image-preview" class="image-preview"></div>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn-primary">Cadastrar Residência</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('fotoCasa');
+        const fileNameDisplay = document.getElementById('file-name');
+        const imagePreview = document.getElementById('image-preview');
+        
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const fileName = this.files[0].name;
+                fileNameDisplay.textContent = fileName;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                    imagePreview.style.display = 'block';
+                }
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                fileNameDisplay.textContent = 'Selecione uma imagem';
+                imagePreview.innerHTML = '';
+                imagePreview.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

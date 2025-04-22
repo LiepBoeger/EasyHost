@@ -1,36 +1,62 @@
-{% extends 'base_navbar.html' %}
-{% block conteudo %}
-<div class="container mt-4">
-    <h2 class="mb-4">Todos os Aluguéis</h2>
+{% extends "base_dashboard.html" %}
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+{% block title %}EasyHost - Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Meus Aluguéis</h1>
+</div>
+
+<div class="cards-container">
+    {% if alugueis %}
         {% for aluguel, casa_nome, casa_imagem, usuario_nome in alugueis %}
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='uploads/casas/' + casa_imagem) if casa_imagem else url_for('static', filename='img/default-house.jpg') }}"
-                     class="card-img-top"
-                     alt="{{ casa_nome }}"
-                     style="height: 200px; object-fit: cover;">
-
-                <div class="card-body">
-                    <h5 class="card-title">{{ casa_nome }}</h5>
-                    <div class="card-text">
-                        <p><i class="bi bi-person-fill"></i> <strong>Responsável:</strong> {{ usuario_nome }}</p>
-                        <p><i class="bi bi-calendar-date"></i> <strong>Data de Início:</strong> {{ aluguel.data_inicio.strftime('%d/%m/%Y') }}</p>
-                        <p><i class="bi bi-people-fill"></i> <strong>Hóspedes:</strong> {{ aluguel.qtd_hosp }}</p>
-                        {% if aluguel.obs %}
-                        <div class="alert alert-light p-2 mt-2">
-                            <i class="bi bi-chat-left-text"></i> <strong>Observações:</strong> {{ aluguel.obs }}
+            <div class="aluguel-card">
+                <div class="card-image">
+                    <img src="{{ url_for('static', filename='uploads/' + casa_imagem) }}" alt="{{ casa_imagem }}">
+                </div>
+                <div class="card-content">
+                    <h2>{{casa_nome}}</h2>
+                    <div class="card-info">
+                        <div class="info-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <span>{{ aluguel.qtd_hosp }} hóspedes</span>
                         </div>
-                        {% endif %}
+                        <div class="info-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <span>{{ aluguel.data_inicio.strftime('%d/%m/%Y') }}</span>
+                        </div>
                     </div>
+                    {% if aluguel.obs %}
+                        <div class="card-observations">
+                            <h3>Observações:</h3>
+                            <p>{{ aluguel.obs }}</p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
-        </div>
-        {% else %}
-        <div class="col-8">
-        </div>
         {% endfor %}
-    </div>
+    {% else %}
+        <div class="empty-state">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#1a2e44" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <h2>Nenhum aluguel cadastrado</h2>
+            <p>Comece cadastrando uma residência e depois um aluguel.</p>
+            <div class="empty-actions">
+                <a href="{{ url_for('cadastroCasa_route.cadastrarCasa') }}" class="btn-primary">Cadastrar Residência</a>
+            </div>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

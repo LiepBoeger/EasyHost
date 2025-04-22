@@ -24,5 +24,7 @@ def home():
         Aluguel.data_inicio.desc()
     ).all()
 
+    print(alugueis)
+
     return render_template('home.html', alugueis=alugueis)
 

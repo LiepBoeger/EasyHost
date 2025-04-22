@@ -3,11 +3,18 @@ from routes import login_route, cadastro_route, home_route, logout_route, cadast
 from models.db import db
 from models import usuario_models
 from flask_login import LoginManager
+import os
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 #Registro de rotas
 app.register_blueprint(cadastro_route.cadastro_route_bp)

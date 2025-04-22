@@ -3,6 +3,7 @@ from models.casa_models import Casas
 from models.db import db
 from werkzeug.utils import secure_filename
 import os
+from datetime import datetime
 
 cadastroCasa_route_bp = Blueprint('cadastroCasa_route', __name__)
 
@@ -16,22 +17,30 @@ def allowed_file(filename):
 @cadastroCasa_route_bp.route('/cadastroCasa', methods=['GET', 'POST'])
 def cadastrarCasa():
     if request.method == 'POST':
-        nomeCasa = request.form['nomeCasa']
-        fotoCasa = request.form['fotoCasa']
+        nomeCasa = request.form.get('nomeCasa')
+        fotoCasa = request.files.get('fotoCasa')
 
         if not nomeCasa or not fotoCasa:
             flash('Preencha os dois campos', 'danger')
         else:
-            if 'foto_casa' in request.files:
-                file = request.files['foto_casa']
+            if 'fotoCasa' in request.files:
+                file = request.files['fotoCasa']
                 if file and allowed_file(file.filename):
                     filename = secure_filename(file.filename)
-                    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-                    file.save(os.path.join(UPLOAD_FOLDER, filename))
+                    filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{filename}"
+                    filepath = os.path.join('static/uploads', filename)
+                    fotoCasa.save(filepath)
 
             id_usuario = session.get('id')
-            casa = Casas(id_usuario, nomeCasa, fotoCasa)
-            db.session.add(casa)
-            db.session.commit()
-            return redirect(url_for('cadastroCasa_route.cadastrarCasa'))
+            casa = Casas(id_usuario, nomeCasa, filename)
+            try:
+                db.session.add(casa)
+                db.session.commit()
+                
+                flash('Residência cadastrada com sucesso', 'sucess')
+                return redirect(url_for('cadastroCasa_route.cadastrarCasa'))
+            except:
+                db.session.rollback()
+                flash('Erro ao Cadastrar residência', 'danger')
+                
     return render_template('cadastroCasa.html')
